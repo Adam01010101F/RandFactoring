@@ -4,38 +4,40 @@
  * Seamphore - Main
  **/
 #include <iostream>
-#include <vector>			
+#include <unistd.h>
+#include <stdio.h>
 #include <cstdlib>
 #include <string>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <time.h>
+#include <vector>
 #include "semaphore.h"
 
-int getLoc(std::vector<long>, long);
+int getLoc(vector<long>, long);
 
 enum {uSem, vSem};
-
+using namespace std;
 
 int main(){
      srand(time(NULL));
      SEMAPHORE sem(2);
-     uSem.V(uSem);
-     vSem.V(vSem);
+     //sem.V(uSem);
+     //sem.V(vSem);
      int num =-1;
      long parentPID = getpid();
-     std::vector<long> childPID;
-     std::string qString;
+     vector<long> childPID;
+     string qString;
      do{
           childPID.push_back(fork());
           num++; 
      }while(getpid()==parentPID && childPID.size()<4);
      
      if(getpid()==parentPID){
-          std::cout<<"I am the parent"<<std::endl;          
+          cout<<"I am the parent"<<endl;          
      }
      else{
-          std::cout<<num<<": ";
+          cout<<num<<": ";
           if(num %2 ==0){          
                int U = 827395609;
                while(1){
@@ -43,8 +45,8 @@ int main(){
                     if(R<100 || R%U==0){
                          break;}
                     else{
-                         std::cout<<num<<" - Remainder:"<<U%R<<std::endl;
-                    }
+                         cout<<num<<": "<<U<<"/"<<R<<" = "<<U/R
+                                  <<endl;}
                }
           }
           else{
@@ -54,7 +56,8 @@ int main(){
                     if(R<100 || R%V==0){
                          break;}
                     else{
-                         std::cout<<num<<" - Remainder:"<<V%R<<std::endl;
+                         cout<<num<<": "<<V<<"/"<<R<<" = "<<V/R
+                                  <<endl;
                     }
                }
           }
@@ -70,10 +73,9 @@ int getInt(){
 
 
 //Might not be needed
-int getLoc(std::vector<long> cPID, long target){
+int getLoc(vector<long> cPID, long target){
     for(int i=0; i<(int)cPID.size();i++){
           if(cPID.at(target)==0){return i;};
      }
      return -1;
 }
-
